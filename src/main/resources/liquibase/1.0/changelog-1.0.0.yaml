@@ -1,0 +1,28 @@
+databaseChangeLog:
+  -  changeSet:
+       id:  createTable-product
+       author:  Ali Huseyn
+       changes:
+         -  createTable:
+              tableName:  products
+              columns:
+                -  column:
+                     name:  id
+                     type:  BIGINT
+                     autoIncrement: true
+                     constraints:
+                       primaryKey: true
+                       nullable: false
+
+                - column:
+                    name: title
+                    type: varchar(200)
+                - column:
+                    name: price
+                    type: DECIMAL(10,2)
+                - column:
+                    name: category
+                    type: varchar(200)
+                - column:
+                    name: stock
+                    type: integer

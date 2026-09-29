@@ -1,0 +1,13 @@
+Server:
+  port: 8089
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ms_ecommerce
+    password: 123
+    username: postgres
+  jpa:
+    show-sql: true
+  liquibase:
+    change-log: classpath:liquibase/changelog-master.yaml

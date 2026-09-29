@@ -1,0 +1,16 @@
+package org.example.msecommerce.dto;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class DummyProductsResponseDto {
+  private   List<DummyProductResponseDto> products;
+
+
+}
