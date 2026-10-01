@@ -6,6 +6,7 @@ import org.example.msecommerce.dto.DummyProductResponseDto;
 import org.example.msecommerce.dto.DummyProductsResponseDto;
 import org.example.msecommerce.dto.ProductRequestDto;
 import org.example.msecommerce.dto.ProductResponseDto;
+import org.example.msecommerce.entity.ProductEntity;
 import org.example.msecommerce.enums.ProductStatusEnum;
 import org.example.msecommerce.exception.ProductNotFoundException;
 import org.example.msecommerce.mapping.ProductMapping;
@@ -31,14 +32,20 @@ public class ProductService {
 
     }
 
-    public ProductResponseDto getProductById(long id) {
-
+    public ProductEntity fetchProductById(long id) {
         var productEntity = productRepository.findById(id);
 
         if (productEntity.isEmpty()) {
             throw new ProductNotFoundException("Product not found");
         }
-        return ProductMapping.getProductEntityFromResponse(productEntity.get());
+        return productEntity.get();
+    }
+
+    public ProductResponseDto getProductById(long id) {
+
+        var productEntity = fetchProductById(id);
+
+        return ProductMapping.getProductEntityFromResponse(productEntity);
     }
 
     public List<ProductResponseDto> getAllProducts() {
@@ -50,32 +57,26 @@ public class ProductService {
     }
 
     public void deleteProductById(long id) {
-        var entity = productRepository.findById(id);
-        if (entity.isEmpty()) {
-            throw new ProductNotFoundException("Product not found");
-        }
-        entity.get().setStatus(ProductStatusEnum.INACTIVE);
-        productRepository.save(entity.get());
+        var productEntity = fetchProductById(id);
+
+        productEntity.setStatus(ProductStatusEnum.INACTIVE);
+        productRepository.save(productEntity);
 
     }
 
     public void updateProduct(long id, ProductRequestDto productRequestDto) {
-        var entity = productRepository.findById(id);
-        if (entity.isEmpty()) {
-            throw new ProductNotFoundException("Product not found");
-        }
+        var productEntity = fetchProductById(id);
 
-
-        var result = ProductMapping.updateProductEntityFromRequestDto(entity.get(), productRequestDto);
+        var result = ProductMapping.updateProductEntityFromRequestDto(productEntity, productRequestDto);
 
         productRepository.save(result);
 
     }
 
     public DummyProductsResponseDto getExternalProducts() {
-
         return productFeignClient.getProducts();
     }
+
     @Async
     public DummyProductsResponseDto getExternalProductsAsync() {
         var result = productFeignClient.getProducts();
